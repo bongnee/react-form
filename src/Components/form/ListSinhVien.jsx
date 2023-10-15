@@ -1,6 +1,7 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 
-export default class ListSinhVien extends Component {
+class ListSinhVien extends Component {
   render() {
     return (
       <div className="p-4">
@@ -14,15 +15,25 @@ export default class ListSinhVien extends Component {
             </tr>
           </thead>
           <tbody>
+          {this.props.DSSV.map((s) => {
+            return(
             <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-            </tr>
+              <th scope="row">{s.maSV}</th>
+              <td>{s.hoTen}</td>
+              <td>{s.sdt}</td>
+              <td>{s.email}</td>
+            </tr>)
+          })}
           </tbody>
         </table>
       </div>
     );
   }
 }
+const mapStateToProps = (rootReducer) => {
+  return {
+    DSSV: rootReducer.ReactFormReducer.DSSV,
+  };
+};
+
+export default connect(mapStateToProps)(ListSinhVien);

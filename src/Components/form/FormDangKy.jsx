@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { flushSync } from "react-dom";
 import { connect } from "react-redux";
-import { submitCreator } from "../../Redux/reducers/reactForm.action";
+import { submitCreator, updateCreator } from "../../Redux/reducers/reactForm.action";
 
 class FormDangKy extends Component {
   state = {
@@ -32,14 +32,14 @@ class FormDangKy extends Component {
         case "maSV":
           {
             newError[prop] = "";
-            const regex_number = /^\d+$/;
+            const regex_number = /^\d{3}$/;
             if (!regex_number.test(currentState[prop])) {
-              newError[prop] = "Mã sinh viên phải là số";
+              newError[prop] = "Mã sinh viên phải là số có 3 chữ số";
             }
             const checkMaSV = this.props.DSSV.find((i) => {
               return +i.maSV === +this.state.currentState.maSV;
             });
-            if (checkMaSV) {
+            if (checkMaSV && this.props.svEdit === null) {
               newError[prop] = "Mã sinh viên không được trùng";
             }
             if (currentState[prop].length === 0) {
@@ -125,13 +125,15 @@ class FormDangKy extends Component {
   };
   handleSubmit = (event) => {
     event.preventDefault();
-
     const newError = this.handleValidate();
     const checkError = Object.values(newError).every(
       (index) => index.length === 0
     );
     if (checkError) {
-      this.props.dispatch(submitCreator(this.state.currentState));
+      const action = this.props.svEdit
+        ? updateCreator(this.state.currentState)
+        : submitCreator(this.state.currentState);
+      this.props.dispatch(action);
       this.setState({
         currentState: {
           maSV: "",
@@ -146,8 +148,9 @@ class FormDangKy extends Component {
           email: false,
         },
       });
-      alert("thanh cong");
+      // alert("thanh cong");
     }
+
     this.setState({
       touch: {
         maSV: true,
@@ -157,17 +160,30 @@ class FormDangKy extends Component {
       },
     });
   };
+  static getDerivedStateFromProps(newProps, currentState) {
+    console.log({
+      newProps,
+      currentState,
+      // preProps: this.props,
+    });
+    if (newProps.svEdit !== null) {
+      if (newProps.svEdit.maSV !== currentState.currentState.maSV) {
+        return {
+          currentState: newProps.svEdit,
+        };
+      }
+    }
+    return null;
+  }
 
   render() {
-    console.log(this.props);
+    console.log(this.state.currentState, "state");
+    console.log(this.props.svEdit);
     return (
-      <div>
-        <h2
+      <div style={{padding: '50px 0'}}>
+        <h2 className="bg-dark text-white"
           style={{
-            backgroundColor: "black",
-            color: "white",
             padding: "10px 10px",
-            borderRadius: "5px",
           }}
         >
           Thông tin sinh viên
@@ -178,6 +194,7 @@ class FormDangKy extends Component {
               <label htmlFor="maSV">Mã SV</label>
               <input
                 name="maSV"
+                disabled={this.props.svEdit}
                 type="text"
                 className="form-control"
                 id="maSV"
@@ -273,18 +290,18 @@ class FormDangKy extends Component {
               )}
             </div>
           </div>
-          <button type="submit" className="btn btn-primary" onClick={() => {}}>
-            Thêm sinh viên
+          <button type="submit" className="btn btn-primary">
+            {this.props.svEdit ? "Cập nhật" : "Thêm sinh siên"}
           </button>
         </form>
       </div>
     );
   }
 }
-const mapStateToProps = (reducer) => {
-console.log(reducer)
+const mapStateToProps = (rootReducer) => {
   return {
-    DSSV: reducer.ReactFormReducer.DSSV,
+    DSSV: rootReducer.ReactFormReducer.DSSV,
+    svEdit: rootReducer.ReactFormReducer.svEdit,
   };
 };
 

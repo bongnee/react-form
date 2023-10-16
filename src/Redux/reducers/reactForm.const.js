@@ -1,3 +1,6 @@
 export const ReactFormConst = {
-    Submit : 'ReactFormConst/Submit'
+    submit : 'ReactFormConst/submit',
+    edit: "ReactFormConst/edit",
+    delete: 'ReactFormConst/delete',
+    update: "ReactFormConst/update"
 };

@@ -99,9 +99,20 @@ class FormDangKy extends Component {
     return newError;
   };
 
-  handleOnChange = async (event) => {
+  handleOnChange = async (event) => { 
+    
     const { target } = event;
     const { value, name } = target;
+
+    // flushSync(() => {
+    //   this.setState({    
+    //     value: {
+    //       ...this.state.value, 
+    //       [name]: value,
+    //     },
+    //   });
+    // });
+
     await this.setState({
       currentState: {
         ...this.state.currentState,
@@ -113,6 +124,13 @@ class FormDangKy extends Component {
 
   handleBlur = (event) => {
     const { name } = event.target;
+    // this.setState({
+    //   touch: {
+    //     ...this.state.touch,
+    //     [name]: true,
+    //   },
+    // });
+
     flushSync(() => {
       this.setState({
         touch: {
@@ -125,11 +143,24 @@ class FormDangKy extends Component {
   };
   handleSubmit = (event) => {
     event.preventDefault();
+
+    this.setState({
+      touch: {
+        maSV: true,
+        hoTen: true,
+        sdt: true,
+        email: true,
+      },
+    });
+
     const newError = this.handleValidate();
     const checkError = Object.values(newError).every(
       (index) => index.length === 0
     );
-    if (checkError) {
+
+
+    if (checkError === false) return;
+
       const action = this.props.svEdit
         ? updateCreator(this.state.currentState)
         : submitCreator(this.state.currentState);
@@ -149,16 +180,35 @@ class FormDangKy extends Component {
         },
       });
       // alert("thanh cong");
-    }
+    
 
-    this.setState({
-      touch: {
-        maSV: true,
-        hoTen: true,
-        sdt: true,
-        email: true,
-      },
-    });
+
+
+
+
+    // if (checkError) {
+    //   const action = this.props.svEdit
+    //     ? updateCreator(this.state.currentState)
+    //     : submitCreator(this.state.currentState);
+    //   this.props.dispatch(action);
+    //   this.setState({
+    //     currentState: {
+    //       maSV: "",
+    //       hoTen: "",
+    //       sdt: "",
+    //       email: "",
+    //     },
+    //     touch: {
+    //       maSV: false,
+    //       hoTen: false,
+    //       sdt: false,
+    //       email: false,
+    //     },
+    //   });
+    //   // alert("thanh cong");
+    // }
+
+  
   };
   static getDerivedStateFromProps(newProps, currentState) {
     console.log({
@@ -177,8 +227,7 @@ class FormDangKy extends Component {
   }
 
   render() {
-    console.log(this.state.currentState, "state");
-    console.log(this.props.svEdit);
+    
     return (
       <div style={{padding: '50px 0'}}>
         <h2 className="bg-dark text-white"

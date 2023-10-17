@@ -3,44 +3,45 @@ import { connect } from "react-redux";
 import { editCreator } from "../../Redux/reducers/reactForm.action";
 import { deleteCreator } from "../../Redux/reducers/reactForm.action";
 class ListSinhVien extends Component {
-  tableDSSV = () => {
-    return this.props.stateRedux.DSSV.map((sv) => {
-      let { maSV, hoTen, sdt, email } = sv;
-      return (
-        <tr
-          key={maSV}
-          style={{
-            textAlign: "center",
-          }}
-        >
-          <td>{maSV}</td>
-          <td>{hoTen}</td>
-          <td>{sdt}</td>
-          <td>{email}</td>
-          <td>
-            <button
-              className="btn btn-success mr-3"
-              onClick={() => {
-                this.props.dispatch(editCreator(sv));
-              }}
-            >
-              edit
-            </button>
-            <button
-              className="btn btn-warning"
-              onClick={() => {
-                this.props.dispatch(deleteCreator(sv));
-              }}
-            >
-              Delete
-            </button>
-          </td>
-        </tr>
-      );
-    });
-  };
+  // tableDSSV = () => {
+  //   return this.props.stateRedux.DSSV.map((sv) => {
+  //     let { maSV, hoTen, sdt, email } = sv;
+  //     return (
+  //       <tr
+  //         key={maSV}
+  //         style={{
+  //           textAlign: "center",
+  //         }}
+  //       >
+  //         <td>{maSV}</td>
+  //         <td>{hoTen}</td>
+  //         <td>{sdt}</td>
+  //         <td>{email}</td>
+  //         <td>
+  //           <button
+  //             className="btn btn-success mr-3"
+  //             onClick={() => {
+  //               this.props.dispatch(editCreator(sv));
+  //             }}
+  //           >
+  //             edit
+  //           </button>
+  //           <button
+  //             className="btn btn-warning"
+  //             onClick={() => {
+  //               this.props.dispatch(deleteCreator(sv));
+  //             }}
+  //           >
+  //             Delete
+  //           </button>
+  //         </td>
+  //       </tr>
+  //     );
+  //   });
+  // };
 
   render() {
+    console.log("DSSV", this.props.DSSV);
     return (
       <div className="mt-3">
         <table className="table">
@@ -57,7 +58,42 @@ class ListSinhVien extends Component {
               <th scope="col"></th>
             </tr>
           </thead>
-          <tbody>{this.tableDSSV()}</tbody>
+          <tbody>
+            {this.props.DSSV.map((sv) => {
+              
+              return (
+                <tr
+                        
+                        style={{
+                          textAlign: "center",
+                        }}
+                      >
+                        <td>{sv.maSV}</td>
+                        <td>{sv.hoTen}</td>
+                        <td>{sv.sdt}</td>
+                        <td>{sv.email}</td>
+                        <td>
+                          <button
+                            className="btn btn-success mr-3"
+                            onClick={() => {
+                              this.props.dispatch(editCreator(sv));
+                            }}
+                          >
+                            edit
+                          </button>
+                          <button
+                            className="btn btn-warning"
+                            onClick={() => {
+                              this.props.dispatch(deleteCreator(sv));
+                            }}
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+              );
+            })}
+          </tbody>
         </table>
       </div>
     );
@@ -66,7 +102,8 @@ class ListSinhVien extends Component {
 
 const mapStateToProps = (rootReducer) => {
   return {
-    stateRedux: rootReducer.ReactFormReducer,
+   DSSV: rootReducer.ReactFormReducer.DSSV,
   };
 };
 export default connect(mapStateToProps)(ListSinhVien);
+

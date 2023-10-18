@@ -24,3 +24,9 @@ export const submitCreator = (payload) => {
         payload,
     }
  }
+ export const searchCreator = (payload) => { 
+    return {
+        type: ReactFormConst.search,
+        payload,
+    }
+ }
